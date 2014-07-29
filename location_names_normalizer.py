@@ -13,12 +13,15 @@ class LocationsFile():
     # DATA
     INPUT_FILE = "location_names.xlsx"
     OUTPUT_FILE = "location_names_normalized.xlsx"
+    NORMALIZED_SHEET = "tbl_normal"
+    NOT_FOUND_SHEET = "not_found"
 
     def __init__(self, wb):
         self.wb = wb
         self.first_list = LocationsList(wb)
         self.second_list = LocationsDict(wb)
         self.normalized_list = NormalizedLocationsList()
+        self.not_found_list = []
 
     # PUBLIC
     def normalize_names(self):
@@ -27,6 +30,7 @@ class LocationsFile():
 
         # clear normalized list
         self.normalized_list = NormalizedLocationsList()
+        self.not_found_list = []
 
         # iterate through all first_list locations
         i = 1
@@ -42,6 +46,7 @@ class LocationsFile():
                 self.normalized_list.add(location, location_matched)
 
             else:
+                # self.not_found_list.append(location)
                 print "no match,", location
 
             i += 1
@@ -53,20 +58,27 @@ class LocationsFile():
         return self.second_list.count()
 
     def save(self, output_file=None):
-        """Add normalized list to workbook and save it."""
+        """Add normalized list and not found list to workbook and save it."""
 
         # take default values
         output_file = output_file or self.OUTPUT_FILE
 
+        # add lists to workbook, creating new sheets
+        self._list_to_sheet(self.normalized_list, self.NORMALIZED_SHEET)
+        self._list_to_sheet(self.not_found_list, self.NOT_FOUND_SHEET)
+
+        # save excel with normalized list of locations
+        self.wb.save(output_file)
+
+    # PRIVATE
+    def _list_to_sheet(self, locations_list, sheet_name):
+
         # create new sheet
-        ws = self.wb.create_sheet(-1, "tbl_normal")
+        ws = self.wb.create_sheet(-1, sheet_name)
 
         # write each record in excel sheet
         for record in self.normalized_list:
             write_ws(ws, record)
-
-        # save excel with normalized list of locations
-        self.wb.save(output_file)
 
 
 # DATA
@@ -91,14 +103,14 @@ def normalize_location_names(input_file=None, output_file=None):
     lf = LocationsFile(wb)
 
     # count records in each list
-    print "First list has", lf.count_first_list(), "records"
-    print "Second list has", lf.count_second_list(), "records"
+    # print "First list has", lf.count_first_list(), "records"
+    # print "Second list has", lf.count_second_list(), "records"
 
     # creates normalized list of names
     lf.normalize_names()
 
     # count records in normalized list
-    print "Normalized list has", lf.count_normalized_list(), "records"
+    # print "Normalized list has", lf.count_normalized_list(), "records"
 
     # save excel workbook with normalized sheet appended
     lf.save(output_file)

@@ -1,6 +1,7 @@
 #!C:\Python27
 # -*- coding: utf-8 -*-
 from fuzzywuzzy import process
+from utils import normalize_name
 
 
 # PRIVATE CLASSES
@@ -46,6 +47,9 @@ class BaseLocations():
             if len(values) > 0:
                 yield location
 
+    def count(self):
+        pass
+
     def _count_fields(self, ws):
         """Count number of fields in worksheet"""
 
@@ -63,9 +67,17 @@ class NormalizedLocationsList(list, BaseLocations):
         """Adds normalized location based on location_matched way to write it,
         with its correspondence ids from both."""
 
+        # start with the two matched ids
         normalized_location = [location.id, location_matched.id]
+
+        # extend with location and location_matched
         normalized_location.extend(location)
         normalized_location.extend(location_matched)
+
+        # extend with location matched normalized
+        location_matched_norm = [normalize_name(i) for i in location_matched]
+        normalized_location.extend(location_matched_norm)
+
         print normalized_location
         self.append(normalized_location)
 
@@ -86,6 +98,8 @@ class LocationsList(list, BaseLocations):
 
 class LocationsDict(dict, BaseLocations):
 
+    THRESHOLD_RATIO = 75
+
     def __init__(self, wb):
         self._create_second_list(wb)
 
@@ -99,19 +113,21 @@ class LocationsDict(dict, BaseLocations):
             dictionary = self
 
         # take first value field to be found
-        value = location[key_index]
+        value = normalize_name(location[key_index])
 
         # extract matched value from
         value_matched = process.extractOne(value, dictionary.keys())
 
-        if value_matched:
+        if value_matched and value_matched[1] > self.THRESHOLD_RATIO:
             key = value_matched[0]
 
             # if there are more values to evaluate, call recursively
             if len(location) > key_index + 1:
+                print value_matched[1],
                 return self.find(location, dictionary[key], key_index + 1)
 
             else:
+                print value_matched[1],
                 return dictionary[key]
 
         else:
@@ -131,7 +147,7 @@ class LocationsDict(dict, BaseLocations):
         the value in the last dictionary."""
 
         # takes value of key_index location field
-        key_value = location[key_index]
+        key_value = normalize_name(location[key_index])
 
         # if is the last value, add key_value with id, as value
         if len(location) == key_index + 1:

@@ -5,6 +5,15 @@ from kitchen.text.converters import to_unicode
 from openpyxl import Workbook
 
 
+def normalize_name(name):
+    """Convert name to camel case."""
+
+    if name:
+        name = name.strip().title()
+
+    return name
+
+
 def write_ws(ws, record):
     """Add a record to a worksheet."""
     new_row = []
