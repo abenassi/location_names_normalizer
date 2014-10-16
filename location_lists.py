@@ -25,11 +25,11 @@ class BaseLocations():
         num_values = self._count_fields(ws)
 
         # iterate through locations in worksheet
-        i = 1
-        while ws.cell(row=i, column=0).value:
+        i = 2
+        while ws.cell(row=i, column=1).value:
 
             # take id
-            id = ws.cell(row=i, column=0).value
+            id = ws.cell(row=i, column=1).value
 
             # take values
             values = []
@@ -54,7 +54,7 @@ class BaseLocations():
         """Count number of fields in worksheet"""
 
         field_number = 1
-        while ws.cell(row=0, column=field_number).value:
+        while ws.cell(row=1, column=field_number).value:
             field_number += 1
 
         return field_number
@@ -66,6 +66,8 @@ class NormalizedLocationsList(list, BaseLocations):
     def add(self, location, location_matched):
         """Adds normalized location based on location_matched way to write it,
         with its correspondence ids from both."""
+        print "location", location
+        print "location matched", location_matched
 
         # start with the two matched ids
         normalized_location = [location.id, location_matched.id]
@@ -93,6 +95,7 @@ class LocationsList(list, BaseLocations):
 
         # iterate through locations in first sheet and append to a list
         for location in self.iterate_locations_sheet(wb, 0):
+            # print "first location", location
             self.append(location)
 
 
@@ -104,7 +107,7 @@ class LocationsDict(dict, BaseLocations):
         self._create_second_list(wb)
 
     # PUBLIC
-    def find(self, location, dictionary=None, key_index=0):
+    def find(self, location, dictionary=None, key_index=1):
         """Returns the most similar location stored in locations dict to
         location passed into the function."""
 
@@ -140,7 +143,8 @@ class LocationsDict(dict, BaseLocations):
 
         # iterate through locations in second sheet and add to dictionary
         for location in self.iterate_locations_sheet(wb, 1):
-            self._add_location(self, location, 0)
+            print "printing location", location
+            self._add_location(self, location, 1)
 
     def _add_location(self, dictionary, location, key_index):
         """Adds location using hierarchical dictionaries and storing id as

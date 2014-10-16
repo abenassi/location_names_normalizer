@@ -7,9 +7,9 @@ from openpyxl import Workbook
 
 def normalize_name(name):
     """Convert name to camel case."""
-
+    # print name
     if name:
-        name = name.strip().title()
+        name = get_unicode(name).strip().title()
 
     return name
 

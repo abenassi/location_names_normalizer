@@ -3,7 +3,8 @@
 import sys
 from openpyxl import load_workbook
 from utils import write_ws
-from location_lists import LocationsList, LocationsDict, NormalizedLocationsList
+from location_lists import LocationsList, LocationsDict
+from location_lists import NormalizedLocationsList
 
 
 class LocationsFile():
@@ -82,8 +83,8 @@ class LocationsFile():
 
 
 # DATA
-INPUT_FILE = "location_names.xlsx"
-OUTPUT_FILE = "location_names_normalized.xlsx"
+INPUT_FILE = "country_names.xlsx"
+OUTPUT_FILE = "country_names_normalized.xlsx"
 
 
 # USER METHODS
@@ -129,4 +130,5 @@ if __name__ == '__main__':
         output_file = sys.argv[2]
 
     # main call
-    normalize_location_names(input_file, output_file)
+    # normalize_location_names(input_file, output_file)
+    normalize_location_names()
