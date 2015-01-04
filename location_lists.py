@@ -66,8 +66,8 @@ class NormalizedLocationsList(list, BaseLocations):
     def add(self, location, location_matched):
         """Adds normalized location based on location_matched way to write it,
         with its correspondence ids from both."""
-        print "location", location
-        print "location matched", location_matched
+        # print "location", location
+        # print "location matched", location_matched
 
         # start with the two matched ids
         normalized_location = [location.id, location_matched.id]
@@ -80,7 +80,7 @@ class NormalizedLocationsList(list, BaseLocations):
         location_matched_norm = [normalize_name(i) for i in location_matched]
         normalized_location.extend(location_matched_norm)
 
-        print normalized_location
+        # print normalized_location
         self.append(normalized_location)
 
 
@@ -126,11 +126,11 @@ class LocationsDict(dict, BaseLocations):
 
             # if there are more values to evaluate, call recursively
             if len(location) > key_index + 1:
-                print value_matched[1],
+                # print value_matched[1],
                 return self.find(location, dictionary[key], key_index + 1)
 
             else:
-                print value_matched[1],
+                # print value_matched[1],
                 return dictionary[key]
 
         else:
@@ -143,7 +143,7 @@ class LocationsDict(dict, BaseLocations):
 
         # iterate through locations in second sheet and add to dictionary
         for location in self.iterate_locations_sheet(wb, 1):
-            print "printing location", location
+            # print "printing location", location
             self._add_location(self, location, 1)
 
     def _add_location(self, dictionary, location, key_index):

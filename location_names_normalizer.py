@@ -37,18 +37,17 @@ class LocationsFile():
         i = 1
         for location in self.first_list:
 
-            print "Looking number", i, "of", len(self.first_list),
+            # print "Looking number", i, "of", len(self.first_list),
             location_matched = self.second_list.find(location)
 
             # if there is a match, add to normalized list
             if location_matched:
-
-                print "added"
                 self.normalized_list.add(location, location_matched)
 
             else:
                 # self.not_found_list.append(location)
-                print "no match,", location
+                # print "no match,", location
+                pass
 
             i += 1
 
@@ -83,8 +82,9 @@ class LocationsFile():
 
 
 # DATA
-INPUT_FILE = "country_names.xlsx"
-OUTPUT_FILE = "country_names_normalized.xlsx"
+ROOT_NAME = "location_names"
+INPUT_FILE = ROOT_NAME + ".xlsx"
+OUTPUT_FILE = ROOT_NAME + "_normalized.xlsx"
 
 
 # USER METHODS
